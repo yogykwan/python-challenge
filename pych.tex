@@ -1,0 +1,809 @@
+%!Mode::"TeX=UTF-8"
+\documentclass[onecolumn,a4paper,12pt]{article}
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1.25in]{geometry}
+\usepackage{amsmath}
+\usepackage{xltxtra}
+\usepackage{mflogo,texnames}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{ctex}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{color}
+
+\title{\textbf{The Python Challenge}}
+\author{JingG\&YogyKwan}
+\date{\small\it Source: www.pythonchallenge.com}
+\renewcommand\thesection{Level \arabic{section}}
+\setcounter{section}{-1}
+\lstset{numbers=none, numberstyle=\tiny\color{magenta}, frame=shadowbox, flexiblecolumns=false, language=Python, basicstyle=\ttfamily\small, breaklines=true, extendedchars=false, escapechar=\%, texcl=true, showstringspaces=false, showspaces=false, keywordstyle=\bfseries\color{orange}, commentstyle=\slshape\color{red}, rulesepcolor=\color{red!20!green!20!blue!20},  xleftmargin=1em, xrightmargin=1em, aboveskip=1em, tabsize=4, escapeinside=``,
+identifierstyle=\color{black}, stringstyle=\color{blue}, emphstyle=\bfseries\color{RoyalBlue3}}
+
+\begin{document}
+\maketitle
+
+All's done in \textbf{Python 3.4}.
+
+Learn it.
+
+Then, use it.
+
+\textbf{Never} ask for more.
+
+Amazing!
+
+Thus, \textbf{everything} will be ok.
+
+\section{0}
+\begin{lstlisting}
+print(2**38)
+\end{lstlisting}
+
+\section{274877906944}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import string
+
+s="g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj."
+l=string.ascii_lowercase
+t=s.maketrans(l,l[2:]+l[:2])
+print(s.translate(t))
+print('map'.translate(t))
+\end{lstlisting}
+
+\section{ocr}
+\begin{lstlisting}
+import urllib.request,re
+
+def getHtml(suf,pre='http://www.pythonchallenge.com/pc/'):
+    url=pre+suf
+    print(url)
+    html=urllib.request.urlopen(url).read()
+    return html
+
+def getData(rule,html):
+    pat=re.compile(rule,re.S)
+    return pat.findall(html)
+
+html=getHtml('def/ocr.html').decode('utf-8')
+data=getData(r'<!--((?:[^-]+|-[^-]|--[^>])*)-->',html)[-1]
+cnt={}
+for i in data: cnt[i]=cnt.get(i,0)+1
+print(cnt)
+data=re.findall(r'([a-z])',data)
+print(''.join(data))
+\end{lstlisting}
+
+\section{equality}
+\begin{lstlisting}
+html=getHtml('def/equality.html').decode('utf-8')
+data=getData(r'[^A-Z][A-Z]{3}([a-z])[A-Z]{3}[^A-Z]',html)
+print(''.join(data))
+\end{lstlisting}
+
+\section{linkedlist}
+\begin{lstlisting}
+def getNxtPg(x):
+    html=getHtml('def/linkedlist.php?nothing='+str(x)).decode('utf-8')
+    mat=re.match(r'and the next nothing is ([0-9]+)',html)
+    if not mat:
+        print(html)
+        return 0
+    return mat.group(1)
+
+page=12345 #45439-94485,16044-8022,82682-63579,66831-peak
+while int(page)>0: page=getNxtPg(page)
+\end{lstlisting}
+
+\section{peak}
+\begin{lstlisting}
+import pickle
+
+html=getHtml('def/banner.p').decode('utf-8')
+data=pickle.loads(html.encode('utf-8'))
+print(data)
+print('\n'.join([''.join([p[0]*p[1] for p in row]) for row in data]))
+\end{lstlisting}
+
+\section{channel}
+\begin{lstlisting}
+import zipfile,io
+
+def getNxtTxt(x):
+    text=z.read(str(x)+'.txt').decode('utf-8')
+    mat=re.match(r'Next nothing is ([0-9]+)',text)
+    if not mat:
+        print(text)
+        return -1
+    return mat.group(1)
+
+html=getHtml('def/channel.zip')
+z=zipfile.ZipFile(io.BytesIO(html))
+print(z.namelist())
+print(z.read('readme.txt').decode('utf-8'))
+txt=90052
+order=[]
+for i in range(len(z.namelist())-1):
+    order.append(txt)
+    txt=getNxtTxt(txt)
+print(''.join([z.getinfo(str(p)+'.txt').comment.decode('utf-8') for p in order]))
+\end{lstlisting}
+
+\section{oxygen}
+\begin{lstlisting}
+from PIL import Image
+
+im=Image.open(io.BytesIO(getHtml('def/oxygen.png')))
+w,h=im.size
+print(''.join([chr(im.getpixel((p,h//2))[0]) for p in range(0,w)]))
+print(''.join([chr(im.getpixel((p,h//2))[0]) for p in range(0,w,7)]))
+print(''.join(map(chr,[105, 110, 116, 101, 103, 114, 105, 116, 121])))
+\end{lstlisting}
+
+\section{integrity}
+\begin{lstlisting}
+import bz2
+
+un=b'BZh91AY&SYA\xaf\x82\r\x00\x00\x01\x01\x80\x02\xc0\x02\x00 \x00!\x9ah3M\x07<]\xc9\x14\xe1BA\x06\xbe\x084'
+pw=b'BZh91AY&SY\x94$|\x0e\x00\x00\x00\x81\x00\x03$ \x00!\x9ah3M\x13<]\xc9\x14\xe1BBP\x91\xf08'
+print(bz2.decompress(un).decode('utf-8'))
+print(bz2.decompress(pw).decode('utf-8'))
+\end{lstlisting}
+
+\section{good}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request,re,io
+from PIL import Image,ImageDraw
+
+def getData(rule,html):
+    pat=re.compile(rule,re.S)
+    return pat.findall(html)
+
+def getHtmlUn(suf):
+    pre='http://www.pythonchallenge.com/pc/'
+    url=pre+suf
+    print(url)
+    auth_handler=urllib.request.HTTPBasicAuthHandler()
+    auth_handler.add_password(realm='inflate', uri=url, user='huge', passwd='file')
+    opener=urllib.request.build_opener(auth_handler)
+    urllib.request.install_opener(opener)
+    html=opener.open(url).read()
+    return html
+
+html=getHtmlUn('return/good.html').decode('utf-8')
+data=getData(r'first:\n([\d,\n]+)\n\nsecond:\n([\d,\n]+)\n\n-->',html)[0]
+first,second=[data[p].replace('\n','').split(',') for p in range(2)]
+fir=[]
+sec=[]
+for i in first: fir.append(int(i))
+for i in second: sec.append(int(i))
+im=Image.new('RGB',(640,480))
+draw=ImageDraw.Draw(im)
+draw.line(fir)
+draw.line(sec)
+im.save('pych.png')
+\end{lstlisting}
+
+\section{bull}
+\begin{lstlisting}
+a=['1']
+for i in range(0,30):
+    cnt=1
+    b=''
+    for j in range(len(a[i])):
+        if j==len(a[i])-1 or a[i][j]!=a[i][j+1]:
+                b=b+str(cnt)+a[i][j]
+                cnt=1
+        else: cnt+=1
+    a.append(b)
+print(len(a[30]))
+\end{lstlisting}
+
+\section{5808}
+\begin{lstlisting}
+im=Image.open(io.BytesIO(getHtmlUn('return/cave.jpg')))
+w,h=im.size
+for i in range(w):
+    for j in range(h):
+        if (i+j)%2==1:
+            im.putpixel((i,j),0)
+im.save('pych.png')
+\end{lstlisting}
+
+\section{evil}
+\begin{lstlisting}
+html=open('evil2.gfx','rb+').read()
+for i in range(5):
+    open(str(i)+'.dat','wb+').write(html[i::5])
+\end{lstlisting}
+
+\section{disproportional}
+\begin{lstlisting}
+import xmlrpc.client
+
+pb=xmlrpc.client.ServerProxy('http://www.pythonchallenge.com/pc/phonebook.php')
+print(pb.phone('Bert'))
+\end{lstlisting}
+
+\section{italy}
+\begin{lstlisting}
+im=Image.open(io.BytesIO(getHtmlUn('return/wire.png')))
+ni=Image.new('RGB',(100,100))
+dx,dy=[1,0,-1,0],[0,1,0,-1]
+x,y,z=-1,0,0
+for i in range(199):
+    k=i%4
+    for j in range(100-(i+1)//2):
+        x,y=x+dx[k],y+dy[k]
+        ni.putpixel((x,y),im.getpixel((z,0)))
+        z+=1
+ni.save('pych.png')
+\end{lstlisting}
+
+\section{uzi}
+\begin{lstlisting}
+import datetime
+
+for i in range(1996,1000,-20):
+    if i%400==0: continue
+    if(datetime.date(i,1,1).weekday()==3): print(i)
+\end{lstlisting}
+
+\section{mozart}
+\begin{lstlisting}
+im=Image.open(io.BytesIO(getHtmlUn('return/mozart.gif')))
+w,h=im.size
+magenta=195
+move=[]
+for j in range(h):
+    for i in range(w-5):
+        if im.getpixel((i,j))==magenta and im.getpixel((i+4,j))==magenta:
+            move.append(i)
+ni=im.copy()
+for j in range(h):
+    for i in range(w):
+        ni.putpixel((i,j),im.getpixel(((i+move[j])%w,j)))
+ni.save('pych.gif')
+\end{lstlisting}
+
+\section{romance}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request
+import re
+import http.cookiejar
+import urllib.parse
+import xmlrpc.client
+import bz2
+
+global opener,jar
+
+def getHtml(suf):
+    global opener
+    pre='http://www.pythonchallenge.com/pc/'
+    url=pre+suf
+    print(url)
+    html=opener.open(url).read()
+    return html
+
+def getData(rule,html):
+    pat=re.compile(rule,re.S)
+    return pat.findall(html)
+
+def initOpen():
+    global opener,jar
+    auth_handler=urllib.request.HTTPBasicAuthHandler()
+    auth_handler.add_password(realm='inflate',uri='http://www.pythonchallenge.com',user='huge',passwd='file')
+    jar=http.cookiejar.CookieJar()
+    cookie_handler=urllib.request.HTTPCookieProcessor(jar)
+    opener=urllib.request.build_opener(auth_handler,cookie_handler)
+    headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+    'Accept':'text/html;q=0.9,*/*;q=0.8','Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+    'Accept-Encoding':'gzip','Connection':'close','Referer':None}
+    for item in headers: opener.addheaders=[(item,headers[item])]
+    urllib.request.install_opener(opener)
+
+def getNxtCk(x,info):
+    html=getHtml('def/linkedlist.php?busynothing='+str(x)).decode('utf-8')
+    info.append(list(jar)[0].value)
+    data=getData(r'and the next busynothing is (\d+)',html)
+    if not data:
+        print(html)
+        return 0
+    return data[0]
+
+initOpen()
+page=12345
+info=[]
+while int(page)>0: page=getNxtCk(page,info)
+mes=urllib.parse.unquote_to_bytes(''.join(info))
+mes=mes.replace(b'+',b' ',1)
+print(bz2.decompress(mes).decode('utf-8'))
+pb=xmlrpc.client.ServerProxy('http://www.pythonchallenge.com/pc/phonebook.php')
+print(pb.phone('Leopold'))
+req=urllib.request.Request('http://www.pythonchallenge.com/pc/stuff/violin.php')
+req.add_header('Cookie','info=the flowers are on their way')
+response=opener.open(req).read()
+print(response.decode('utf-8'))
+\end{lstlisting}
+
+\section{balloons}
+\begin{lstlisting}
+import codecs,difflib,pprint
+
+def getUnhex(s):
+    return codecs.getdecoder('hex')(re.sub('[^0-9a-zA-Z]','',s))[0]
+
+initOpen()
+delta=open('delta.txt').read()
+line=delta.split('\n')
+pair=[(l[:53],l[56:]) for l in line]
+col=['\n'.join(p[i] for p in pair) for i in range(2)]
+for i in range(2):
+    data=getUnhex(col[i])
+    open('pych'+str(i)+'.png','wb+').write(data)
+coldiff=list(difflib.Differ().compare(col[0].splitlines(),col[1].splitlines()))
+pngs=[''.join(filter(lambda l: l[0]==d, coldiff)) for d in ' -+']
+for i in range(len(pngs)):
+    data=getUnhex(pngs[i])
+    open('pych'+str(i+2)+'.png','wb+').write(data)
+\end{lstlisting}
+
+\section{bin}
+\begin{lstlisting}
+import base64,wave,array
+
+initOpen()
+html=getHtml('hex/bin.html').decode('utf-8')
+data=getData(r'base64\n\n(.*)\n\n',html)[0]
+wav=base64.decodestring(data.encode('utf-8'))
+open('pych1.wav','wb+').write(wav)
+w1=wave.open('pych1.wav','rb')
+w2=wave.open('pych2.wav','wb')
+w2.setparams(w1.getparams())
+a=array.array('i')
+frm=w1.readframes(w1.getnframes())
+a.fromstring(frm)
+a.byteswap()
+w2.writeframes(a.tostring())
+\end{lstlisting}
+
+\section{idiot2}
+\begin{lstlisting}
+import http.client
+
+def getFUO(s):
+    fuo=urllib.request.FancyURLopener()
+    fuo.addheader('Range','bytes='+s+'-')
+    return fuo.open('http://butter:fly@www.pythonchallenge.com/pc/hex/unreal.jpg')
+
+page=['30203','30237','30284','30295','30313','2123456744','2123456712']
+for item in page:
+    im=getFUO(item)
+    print(im.read())
+    print(im.info())
+im=getFUO('1152983631')
+open('pych.zip','wb').write(im.read())
+print('invader'[::-1])
+\end{lstlisting}
+
+\section{*}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import zlib,bz2
+data=open(b'package.pack','rb').read()
+result=''
+while True:
+    if data[:2]==b'x\x9c':
+        data=zlib.decompress(data)
+        result+=' '
+    elif data[:2]==b'BZ':
+        data=bz2.decompress(data)
+        result+='*'
+    elif data[-2:]==b'\x9cx' or data[-2:]==b'ZB':
+        data=data[::-1]
+        result+='\n'
+    else:
+        break
+print(str(data[::-1]))
+print(result)
+\end{lstlisting}
+
+\section{copper}
+\begin{lstlisting}
+initOpen()
+im=Image.open(io.BytesIO(getHtml('hex/white.gif')))
+w,h=im.size
+path=[i.getbbox()[0:2] for i in ImageSequence.Iterator(im)]
+im1=Image.new(im.mode,im.size,0)
+start=0
+for m in path:
+    if m==(100,100):
+        pos=(start,h//2)
+        start+=40
+    else:
+        pos=(pos[0]+m[0]-100,pos[1]+m[1]-100)
+    im1.putpixel(pos,255)
+im1.save('pych.gif')
+\end{lstlisting}
+
+\section{bonus}
+\begin{lstlisting}
+import this
+s='va gur snpr bs jung?'
+print(codecs.decode(s,'rot_13'))
+\end{lstlisting}
+
+\section{ambiguity}
+\begin{lstlisting}
+initOpen()
+im=Image.open(io.BytesIO(getHtml('hex/maze.png')))
+w,h=im.size
+vis=[[0]*h for i in range(w)]
+white=(255,255,255,255)
+start=(w-2,0)
+end=(1,h-1)
+path=[]
+pos=start
+path.append(pos)
+vis[pos[0]][pos[1]]=1
+dx=[-1,0,1,0]
+dy=[0,1,0,-1]
+while pos!=end:
+    for i in range(4):
+        x,y=pos[0]+dx[i],pos[1]+dy[i]
+        #print('i=',i,'x,y=',x,y,'col=',im.getpixel((x,y)))
+        if x>=0 and x<w and y>=0 and y<h and im.getpixel((x,y))!=white and vis[x][y]==0:
+            pos=x,y
+            vis[x][y]=1
+            path.append(pos)
+            break;
+    else:
+        path=path[:-1]
+        pos=path[-1]
+data=[]
+for p in path[1::2]: data.append(im.getpixel(p)[0])
+data=array.array('B',data).tostring()
+open('pych.zip','wb+').write(data)
+\end{lstlisting}
+
+\section{lake}
+\begin{lstlisting}
+initOpen()
+im=Image.new('RGB',(300,300))
+for i in range(1,26):
+    iw=wave.open(io.BytesIO(getHtml('hex/lake%d.wav'%i)))
+    iwim=Image.fromstring('RGB',(60,60),iw.readframes(iw.getnframes()))
+    im.paste(iwim,((i-1)%5*60,(i-1)//5*60))
+im.save('pych.png')
+\end{lstlisting}
+
+\section{decent}
+\begin{lstlisting}
+import hashlib
+
+a=open('mybroken.zip','rb').read()
+for i in range(len(a)):
+    for j in range(256):
+        b=a[:i]+bytes([j])+a[i+1:]
+        if hashlib.md5(b).hexdigest()=='bbb8b499a0eef99b52c7f13f4e78c24b':
+            open('unbroken.zip','wb+').write(b)
+            raise StopIteration
+\end{lstlisting}
+
+\section{speedboat}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request
+import io
+import array
+import bz2
+import keyword
+from PIL import Image
+
+url='http://butter:fly@www.pythonchallenge.com/pc/hex/zigzag.gif'
+opener=urllib.request.FancyURLopener()
+html=opener.open(url).read()
+im=Image.open(io.BytesIO(html))
+
+pal=im.getpalette()
+col=pal[::3]
+data=im.getdata()
+diff=[]
+vis=[]
+flag=None
+for i,p in enumerate(data):
+    if flag is not None and p!=flag:
+        diff.append(p)
+        vis.append(i)
+    flag=col[p]
+
+im2=Image.new('RGB',im.size)
+colors=[(255,255,255)]*len(data)
+mark=(0,0,0)
+for i in vis: colors[i]=mark
+im2.putdata(colors)
+im2.save('pych.png')
+
+bzd=array.array('B',diff).tostring()
+bzf=bz2.decompress(bzd)
+word=set(bzf.split())
+string=[i.decode('utf-8') for i in word]
+ans=set(string)-set(keyword.kwlist)
+ans=[i for i in ans]
+print(ans)
+
+for i in ans:
+    for j in ans:
+        if i=='../ring/bell.html' or j=='../ring/bell.html':
+            continue
+        try:
+            url='http://'+i+':'+j+'@www.pythonchallenge.com/pc/ring/bell/html'
+            print(url)
+            html=opener.open(url)
+            print(i,j)
+            raise StopIteration
+        except urllib.request.HTTPError:
+            pass
+\end{lstlisting}
+
+\section{bell}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request
+import re
+import io
+import string
+import http.cookiejar
+import urllib.parse
+import xmlrpc.client
+import bz2
+import zlib
+import codecs
+import difflib
+import pprint
+import base64
+import wave
+import array
+import http.client
+import hashlib
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageSequence
+
+global opener,jar
+
+def getHtml(suf):
+    global opener
+    pre=r'http://www.pythonchallenge.com/pc/'
+    url=pre+suf
+    print(url)
+    html=opener.open(url).read()
+    return html
+
+def initOpen():
+    global opener,jar
+    auth_handler=urllib.request.HTTPBasicAuthHandler()
+    auth_handler.add_password(realm='the order matters',
+                              uri=r'http://www.pythonchallenge.com',
+                              user='repeat',
+                              passwd='switch')
+    jar=http.cookiejar.CookieJar()
+    cookie_handler=urllib.request.HTTPCookieProcessor(jar)
+    opener=urllib.request.build_opener(auth_handler,cookie_handler)
+    headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+             'Accept':'text/html;q=0.9,*/*;q=0.8',
+             'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+             'Accept-Encoding':'gzip',
+             'Connection':'close',
+             'Referer':None}
+    for item in headers: opener.addheaders=[(item,headers[item])]
+    urllib.request.install_opener(opener)
+
+initOpen()
+im=Image.open(io.BytesIO(getHtml(r'ring/bell.png')))
+w,h=im.size
+green=[]
+for y in range(h):
+    for x in range(w):
+        green.append(im.getpixel((x,y))[1])
+pair=[(green[i],green[i+1]) for i in range(0,len(green),2)]
+ring=[abs(p[0]-p[1]) for p in pair]
+diff=[x for x in ring if x!=42]
+print(''.join(map(chr,diff)))
+\end{lstlisting}
+
+\section{guido}
+\begin{lstlisting}
+initOpen()
+html=getHtml('ring/guido.html').splitlines()[12:]
+bl=[len(i) for i in html]
+data=array.array('B',bl).tostring()
+bz=bz2.decompress(data)
+print(bz.decode('utf-8'))
+\end{lstlisting}
+
+\section{yankeedoodle}
+\begin{lstlisting}
+initOpen()
+html=getHtml(r'ring/yankeedoodle.csv').decode('utf-8')
+data=getData(r'[\d.]+',html)
+value=[float(i)*256 for i in data]
+fac=[]
+for i in range(2,len(value)):
+    if not len(value)%i:
+        fac.append(i)
+im=Image.new('L',(fac[0],fac[1]))
+im.putdata(value)
+im=im.transpose(Image.FLIP_LEFT_RIGHT)
+im=im.transpose(Image.ROTATE_90)
+im.save('pych.png')
+nn=[]
+for i in range(0,len(value)-2,3):
+    n=chr(int(data[i][5]+data[i+1][5]+data[i+2][6]))
+    nn.append(n)
+print(''.join(nn))
+\end{lstlisting}
+
+\section{grandpa}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request
+import io
+from PIL import Image
+
+global opener
+
+def getHtml(suf):
+    global opener
+    pre=r'http://www.pythonchallenge.com/pc/'
+    url=pre+suf
+    print(url)
+    html=opener.open(url).read()
+    return html
+
+def initOpen():
+    global opener
+    auth_handler=urllib.request.HTTPBasicAuthHandler()
+    auth_handler.add_password(realm='island : country',
+                              uri=r'http://www.pythonchallenge.com',
+                              user='kohsamui',
+                              passwd='thailand')
+    opener=urllib.request.build_opener(auth_handler)
+    urllib.request.install_opener(opener)
+
+def mandelbrot(size,max=128,left=0.34,bottom=0.57,width=0.036,height=0.027):
+    xstep=width/size[0]
+    ystep=height/size[1]
+    for y in range(size[1]- 1,-1,-1):
+         for x in range(size[0]):
+             c=complex(left+x*xstep,bottom+y*ystep)
+             z=0+0j
+             for i in range(max):
+                z=z*z+c
+                if abs(z) > 2: break
+             yield i
+
+initOpen()
+im1=Image.open(io.BytesIO(getHtml(r'rock/mandelbrot.gif')))
+im1.save('pych1.gif')
+im2=im1.copy()
+im2.putdata(list(mandelbrot(im1.size)))
+im2.save('pych2.gif')
+diff=[(a-b) for a,b in zip(im1.getdata(),im2.getdata()) if a!=b]
+fac=[]
+for i in range(2,len(diff)):
+    if not len(diff)%i:
+        fac.append(i)
+im3=Image.new('L',(fac[0],fac[1]))
+data=[]
+for i in diff:
+    if i==-16: data.append(255)
+    else: data.append(0)
+im3.putdata(data)
+im3=im3.resize((fac[0]*20,fac[1]*20))
+im3.save('pych3.gif')
+\end{lstlisting}
+
+\section{arecibo}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+global mat
+
+def getList(t,n):
+    if not t: return [' '*n]
+    l=[]
+    for i in range(n+2-sum(t)-len(t)):
+        if len(t)==1:
+            pre=' '*i+'*'*t[0]
+            suf=[' '*(n-i-t[0])]
+        else:
+            pre=' '*i+'*'*t[0]+' '
+            suf=getList(t[1:],n-i-t[0]-1)
+        l+=[pre+s for s in suf]
+    return l
+
+def check(l,x):
+    for s in l:
+        if s[x]!=l[0][x]:
+            return None
+    return l[0][x]
+
+def getNew(hl,vl,n):
+    global mat
+    ans=[]
+    for i,row in enumerate(hl):
+        for j in range(n):
+            if mat[i][j]=='?':
+                ch=check(row,j)
+                if ch:
+                    mat[i][j]=ch
+                    ans.append((i,j))
+    for j,col in enumerate(vl):
+        for i in range(n):
+            if mat[i][j]=='?':
+                ch=check(col,i)
+                if ch:
+                    mat[i][j]=ch
+                    ans.append((i,j))
+    return ans
+
+def solve(h,v,n):
+    global mat
+    mat=[['?']*n for _ in range(n)]
+    hl=[getList(t,n) for t in h]
+    vl=[getList(t,n) for t in v]
+    while True:
+        new=getNew(hl,vl,n)
+        if len(new)==0: break
+        for i,j in new:
+            hl[i]=[r for r in hl[i] if r[j]==mat[i][j]]
+            vl[j]=[c for c in vl[j] if c[i]==mat[i][j]]
+    print('\n'.join(''.join(row) for row in mat))
+
+h=((2,1,2),(1,3,1),(5,),(7,),(9,),(3,),(2,3,2),(2,3,2),(2,3,2))
+v=((2,1,3),(1,2,3),(3,),(8,),(9,),(8,),(3,),(1,2,3),(2,1,3))
+solve(h,v,9)
+h=((3,2),(8,),(10,),(3,1,1),(5,2,1),(5,2,1),(4,1,1),(15,),(19,),(6,14),(6,1,12),(6,1,10),(7,2,1,8),(6,1,1,2,1,1,1,1),(5,1,4,1),(5,4,1,4,1,1,1),(5,1,1,8),(5,2,1,8),(6,1,2,1,3),(6,3,2,1),(6,1,5),(1,6,3),(2,7,2),(3,3,10,4),(9,12,1),(22,1),(21,4),(1,17,1),(2,8,5,1),(2,2,4),(5,2,1,1),(5,))
+v=((5,),(5,),(5,),(3,1),(3,1),(5,),(5,),(6,),(5,6),(9,5),(11,5,1),(13,6,1),(14,6,1),(7,12,1),(6,1,11,1),(3,1,1,1,9,1),(3,4,10),(8,1,1,2,8,1),(10,1,1,1,7,1),(10,4,1,1,7,1),(3,2,5,2,1,2,6,2),(3,2,4,2,1,1,4,1),(2,6,3,1,1,1,1,1),(12,3,1,2,1,1,1),(3,2,7,3,1,2,1,2),(2,6,3,1,1,1,1),(12,3,1,5),(6,3,1),(6,4,1),(5,4),(4,1,1),(5,))
+solve(h,v,32)
+\end{lstlisting}
+
+\section{beer}
+\begin{lstlisting}
+# -*- coding: utf-8 -*-
+import urllib.request
+import io
+from PIL import Image
+from math import sqrt,floor
+
+url=r'http://kohsamui:thailand@www.pythonchallenge.com/pc/rock/beer2.png'
+opener=urllib.request.FancyURLopener()
+html=opener.open(url).read()
+im=Image.open(io.BytesIO(html))
+color=im.getcolors()
+data=im.getdata()
+print(color)
+print(set(data))
+i=len(color)-1
+while i>0:
+    n=floor(sqrt(len(data)))
+    iw=Image.new('P',(n,n))
+    pix=[255 if j!=color[i][1] else 0 for j in data]
+    iw.putdata(pix)
+    iw.save('pych%d.png'%(i//2))
+    temp=[]
+    for j in data:
+        if j!=color[i][1] and j!=color[i-1][1]:
+            temp.append(j)
+    data=temp
+    i-=2
+\end{lstlisting}
+
+\begin{flushright}
+\it\textbf{How to make it?\\Where to go?\\God bless you\&me.}
+\end{flushright}
+
+\end{document}
+
